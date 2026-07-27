@@ -1,0 +1,21 @@
+# Data — do NOT commit (too large / not ours to redistribute)
+data/raw_data/
+data/processed_data/
+data/model_ready_data/
+*.csv
+*.csv.gz
+!data/README.md
+
+# Notebook / Python cruft
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Colab / Drive mount artifacts
+/content/
+drive/
+
+# Environments
+.venv/
+env/
