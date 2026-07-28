@@ -1,7 +1,7 @@
 # Using NLP and StockTwits to Predict Market Data
 
 **AI4ALL Ignite — Group 04**
-Jasleen Kaur · David Mora · Akzel Davila · Fay Ma · Sonakshi Panda · Shana Ibatuan
+Jasleen Kaur · David Mora · Sonakshi Panda · Shana Ibatuan
 
 **Repository:** [stocktwits-market-prediction](https://github.com/sonakshipanda/stocktwits-market-prediction)
 
