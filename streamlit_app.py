@@ -488,8 +488,8 @@ with metric_columns[3]:
 PAGES = [
     "Project Overview",
     "Model Results",
-    "K-Means Finding",
-    "Limitations",
+    "K-Means Findings",
+    "Limitations & Next Steps",
 ]
 if st.session_state.get("dashboard_page") not in PAGES:
     st.session_state.dashboard_page = PAGES[0]
@@ -515,6 +515,50 @@ active_page = st.session_state.dashboard_page
 
 if active_page == "Project Overview":
     st.write("")
+    st.markdown('<div class="section-kicker">Start here</div>', unsafe_allow_html=True)
+    st.header("The project story in four steps")
+    st.caption(
+        "This page explains the question, data, test, and conclusion before "
+        "showing the supporting charts."
+    )
+
+    story_columns = st.columns(4)
+    story_steps = [
+        (
+            "01",
+            "Question",
+            "Can daily StockTwits sentiment help predict whether a stock will rise the next trading day?",
+        ),
+        (
+            "02",
+            "Data",
+            "We combined 4.2 million posts with daily prices for AAPL, AMZN, NVDA, and TSLA.",
+        ),
+        (
+            "03",
+            "Test",
+            "We trained two prediction models and compared them with a simple majority baseline.",
+        ),
+        (
+            "04",
+            "Answer",
+            "The models found patterns, but neither predicted next-day direction reliably.",
+        ),
+    ]
+    for column, (number, title, description) in zip(story_columns, story_steps):
+        with column:
+            st.markdown(
+                f"""
+                <div class="pipeline-card">
+                    <div class="pipeline-number">{number}</div>
+                    <h4>{title}</h4>
+                    <p>{description}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    st.write("")
     st.markdown('<div class="section-kicker">Research question</div>', unsafe_allow_html=True)
     st.markdown(
         """
@@ -530,28 +574,28 @@ if active_page == "Project Overview":
     )
 
     st.write("")
-    st.subheader("From millions of posts to one testable question")
+    st.subheader("How we turned the data into a fair test")
     pipeline_columns = st.columns(4)
     pipeline_steps = [
         (
             "01",
-            "Clean",
-            "Standardize prices and millions of StockTwits posts while removing invalid records.",
+            "Prepare",
+            "Clean posts and prices, remove invalid records, and align each observation by ticker and date.",
         ),
         (
             "02",
-            "Aggregate",
-            "Convert tagged posts into daily bullish, bearish, volume, and change features.",
+            "Summarize",
+            "Turn individual posts into daily measures such as bullish share and post volume.",
         ),
         (
             "03",
-            "Model",
-            "Train Logistic Regression and Random Forest with a chronological split.",
+            "Predict",
+            "Train Logistic Regression and Random Forest using earlier dates for training.",
         ),
         (
             "04",
-            "Evaluate",
-            "Compare against a majority baseline and inspect behavior clusters.",
+            "Check",
+            "Test on later dates, compare with a simple baseline, and explore groups of similar trading days.",
         ),
     ]
     for column, (number, title, description) in zip(pipeline_columns, pipeline_steps):
@@ -567,9 +611,19 @@ if active_page == "Project Overview":
                 unsafe_allow_html=True,
             )
 
+    with st.expander("Plain-language glossary"):
+        st.markdown(
+            """
+            - **Sentiment:** whether a StockTwits user labeled a post Bullish or Bearish.
+            - **Next-day direction:** whether the stock closed higher or lower on the next trading day.
+            - **Majority baseline:** a simple reference that always predicts the most common outcome.
+            - **K-Means:** a method that groups similar trading days without trying to predict an answer.
+            """
+        )
+
     st.write("")
-    st.markdown('<div class="section-kicker">Project visuals</div>', unsafe_allow_html=True)
-    st.header("Explore the data story")
+    st.markdown('<div class="section-kicker">Supporting evidence</div>', unsafe_allow_html=True)
+    st.header("Explore the project visuals")
     st.caption(
         "Choose a chart for a presentation-friendly view and a short interpretation."
     )
@@ -641,10 +695,21 @@ if active_page == "Project Overview":
             unsafe_allow_html=True,
         )
 
+    st.success(
+        "Main takeaway: StockTwits sentiment showed interesting patterns, but "
+        "it did not make next-day market direction reliably predictable in "
+        "this experiment."
+    )
+
 elif active_page == "Model Results":
     st.write("")
     st.markdown('<div class="section-kicker">Supervised learning</div>', unsafe_allow_html=True)
-    st.header("The baseline remained the hardest model to beat")
+    st.header("Did the prediction models beat a simple guess? No.")
+    st.write(
+        "The majority baseline always predicts the most common result—an up "
+        "day. A useful model should consistently perform better than that "
+        "simple rule on unseen dates."
+    )
 
     result_metrics = st.columns(3)
     with result_metrics[0]:
@@ -765,43 +830,31 @@ elif active_page == "Model Results":
         "system. The next model must beat the baseline on unseen future data, "
         "not just during tuning."
     )
+    st.success(
+        "Main takeaway: Random Forest was the best model we trained, but its "
+        "52.6% accuracy still fell below the 53.6% majority baseline."
+    )
 
-elif active_page == "K-Means Finding":
+elif active_page == "K-Means Findings":
     st.write("")
     st.markdown('<div class="section-kicker">Unsupervised learning</div>', unsafe_allow_html=True)
-    st.header("The loudest days showed a small contrarian tilt")
+    st.header("What types of trading days appeared in the data?")
+    st.info(
+        "K-Means does not predict whether a stock will go up or down. It simply "
+        "groups trading days that look similar, allowing us to explore patterns."
+    )
     st.write(
         "K-Means grouped ticker-days using bullish share, log post volume, "
         "same-day return, and intraday range. Next-day return was held out and "
         "measured only after the clusters were formed."
     )
 
-    finding_columns = st.columns(2)
-    with finding_columns[0]:
-        st.markdown(
-            """
-            <div class="finding hype">
-                <div class="finding-label">Loud hype days</div>
-                <div class="finding-value">−0.27%</div>
-                <p>Average next-day return after approximately +5.8% same-day gains.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with finding_columns[1]:
-        st.markdown(
-            """
-            <div class="finding panic">
-                <div class="finding-label">Loud panic days</div>
-                <div class="finding-value">+0.81%</div>
-                <p>Average next-day return after approximately −4.4% same-day declines.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
     st.write("")
-    st.subheader("Why we selected k=5")
+    st.subheader("1. Why we selected five clusters")
+    st.caption(
+        "The silhouette score measures how clearly the groups are separated. "
+        "A higher score indicates a cleaner grouping."
+    )
     silhouette_chart_column, silhouette_insight_column = st.columns([1.7, 1])
     with silhouette_chart_column:
         if SILHOUETTE_PATH is not None:
@@ -834,7 +887,7 @@ elif active_page == "K-Means Finding":
         )
 
     st.write("")
-    st.subheader("What the five clusters look like")
+    st.subheader("2. What the five clusters look like")
     if (FIGURES_PATH / "07_kmeans_clusters.png").exists():
         st.image(
             str(FIGURES_PATH / "07_kmeans_clusters.png"),
@@ -846,12 +899,44 @@ elif active_page == "K-Means Finding":
             "Add `07_kmeans_clusters.png` to the `figures/` folder to display "
             "the cluster chart here."
         )
+
+    st.write("")
+    st.subheader("3. What patterns stood out")
+    finding_columns = st.columns(2)
+    with finding_columns[0]:
+        st.markdown(
+            """
+            <div class="finding hype">
+                <div class="finding-label">Loud hype days</div>
+                <div class="finding-value">−0.27%</div>
+                <p>Average next-day return after approximately +5.8% same-day gains.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with finding_columns[1]:
+        st.markdown(
+            """
+            <div class="finding panic">
+                <div class="finding-label">Loud panic days</div>
+                <div class="finding-value">+0.81%</div>
+                <p>Average next-day return after approximately −4.4% same-day declines.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     st.warning(
         "This is an association in the analyzed sample. The clusters were not "
         "tested as an out-of-sample trading strategy."
     )
+    st.success(
+        "Main takeaway: five clusters gave the clearest grouping of the tested "
+        "choices and revealed descriptive patterns, but they do not prove that "
+        "sentiment predicts future returns."
+    )
 
-elif active_page == "Limitations":
+elif active_page == "Limitations & Next Steps":
     st.write("")
     st.markdown('<div class="section-kicker">Responsible interpretation</div>', unsafe_allow_html=True)
     st.header("What this project can—and cannot—claim")
@@ -922,8 +1007,9 @@ elif active_page == "Limitations":
     )
 
     st.success(
-        "Responsible takeaway: the negative result is useful. It cautions "
-        "against treating crowd sentiment as a dependable next-day trading signal."
+        "Main takeaway: the negative result is still useful. It shows why the "
+        "current evidence should not be treated as a dependable next-day "
+        "trading signal and identifies what a stronger follow-up test requires."
     )
 
 st.markdown(
