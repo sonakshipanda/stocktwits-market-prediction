@@ -5,6 +5,8 @@ Jasleen Kaur · David Mora · Akzel Davila · Fay Ma · Sonakshi Panda · Shana 
 
 **Repository:** [stocktwits-market-prediction](https://github.com/sonakshipanda/stocktwits-market-prediction)
 
+**Live showcase:** [stocktwits-market-prediction.streamlit.app](https://stocktwits-market-prediction.streamlit.app)
+
 > **Research question:** Can StockTwits sentiment help predict the next-trading-day price direction of AAPL, AMZN, NVDA, and TSLA?
 
 ---
@@ -36,7 +38,6 @@ After cleaning and filtering to the four tickers, the StockTwits data yielded **
 ## Methods & Algorithms
 
 ### 1. Sentiment-based prediction (supervised)
-<!-- AKZEL: fill in model details + evaluation once finalized -->
 - **Type:** Supervised binary classification — **Logistic Regression** and **Random Forest**, compared against a majority-class baseline.
 - **Goal:** Predict whether a stock closes **up** the next day.
 - **Inputs:** Market features (daily return, volume change, intraday return, daily range, 5-day volatility, price vs. 5-day moving average) **and** social features (bullish/bearish/unknown ratios, log post volume, average sentiment, labeled ratio, day-over-day sentiment change).
@@ -102,7 +103,7 @@ _Additional charts (volatility, trading volume, bullish share) are in the [`figu
 **Sources of bias and how the ML process can amplify or mitigate them.**
 - **Sampling bias:** the price dataset tracks only famous, currently-successful U.S. brands (survivorship bias). A model trained on it can *amplify* bias by generalizing to "all stocks." We *mitigate* by explicitly scoping conclusions to these four large-cap U.S. tickers.
 - **Platform bias:** StockTwits users are not representative of all investors, and the labeled posts are overwhelmingly bullish. A naive model can amplify this imbalance. We mitigate it by using ratios and sentiment changes rather than raw bullish counts and by comparing trained models against a majority-class baseline.
-- **Time-zone bias:** global markets trade in different time zones, so U.S.-afternoon posts land after other markets close. We *mitigate* by normalizing timestamps to U.S. market time and aligning strictly by trading date.
+- **Time-zone bias:** posts are currently parsed as UTC and grouped by calendar date rather than aligned to U.S. market sessions. This can assign after-hours posts to the wrong predictive window. A future version should explicitly convert timestamps and apply market-open and market-close cutoffs.
 
 ---
 
@@ -122,6 +123,10 @@ _Additional charts (volatility, trading volume, bullish share) are in the [`figu
 .
 ├── README.md
 ├── .gitignore
+├── streamlit_app.py             # presentation-ready results dashboard
+├── requirements.txt             # Streamlit deployment dependencies
+├── .streamlit/
+│   └── config.toml              # dashboard theme
 ├── notebooks/
 │   └── Group_04.ipynb          # full pipeline: cleaning → features → visualization → prediction → K-Means
 ├── figures/                    # exported charts used in the README / presentation
@@ -140,9 +145,26 @@ _Additional charts (volatility, trading volume, bullish share) are in the [`figu
 
 ## How to Run
 
+### Option 1: Explore the deployed dashboard
+
+Open the [live Streamlit showcase](https://stocktwits-market-prediction.streamlit.app). No installation, dataset download, or Google Drive access is required. The dashboard presents the completed methodology, evaluation results, figures, K-Means finding, and limitations; it does not rerun the multi-gigabyte cleaning pipeline.
+
+### Option 2: Run the dashboard locally
+
+```bash
+git clone https://github.com/sonakshipanda/stocktwits-market-prediction.git
+cd stocktwits-market-prediction
+python -m pip install -r requirements.txt
+python -m streamlit run streamlit_app.py
+```
+
+Streamlit will print a local URL, normally `http://localhost:8501`.
+
+### Option 3: Reproduce the full analysis in Google Colab
+
 1. Request access to the shared **Group-04** Google Drive folder (contains `raw_data/` and generated `processed_data/`) and add a shortcut to it in your My Drive.
 2. Open `notebooks/Group_04.ipynb` in Google Colab. The loader cell auto-locates the project folder, so it works regardless of the exact folder name.
-3. Use **Runtime → Restart session and run all** to run everything top to bottom: mount & load → clean stock prices → clean news → clean StockTwits posts → daily sentiment summary → feature merge → visualizations → supervised prediction models → K-Means.
+3. Use **Runtime → Restart session and run all** to run everything top to bottom: mount and load → clean stock prices → clean news → clean StockTwits posts → daily sentiment summary → feature merge → visualizations → supervised prediction models → K-Means.
 4. Generated files (`cleaned_*.csv`, a gzip-compressed `cleaned_stocktwits_posts.csv`, and `combined_stocktwits_market_data.csv`) are written to `processed_data/` and `model_ready_data/`.
 
 > Raw data is not stored in this repo due to size. See `data/README.md`.
