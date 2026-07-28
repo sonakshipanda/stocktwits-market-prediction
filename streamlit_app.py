@@ -91,6 +91,29 @@ FIGURE_DETAILS = {
     },
 }
 
+SILHOUETTE_FILENAMES = (
+    "silhouette_comparison.png",
+    "silhoutte_comparison.png",
+)
+SILHOUETTE_PATH = next(
+    (
+        FIGURES_PATH / file_name
+        for file_name in SILHOUETTE_FILENAMES
+        if (FIGURES_PATH / file_name).exists()
+    ),
+    None,
+)
+if SILHOUETTE_PATH is not None:
+    FIGURE_DETAILS[SILHOUETTE_PATH.name] = {
+        "title": "Silhouette score comparison",
+        "eyebrow": "Choosing the cluster count",
+        "insight": (
+            "Higher silhouette scores indicate more clearly separated clusters. "
+            "Among the tested values, k=5 produced the strongest separation and "
+            "provided quantitative support for the final cluster count."
+        ),
+    }
+
 
 st.markdown(
     """
@@ -778,6 +801,40 @@ elif active_page == "K-Means Finding":
         )
 
     st.write("")
+    st.subheader("Why we selected k=5")
+    silhouette_chart_column, silhouette_insight_column = st.columns([1.7, 1])
+    with silhouette_chart_column:
+        if SILHOUETTE_PATH is not None:
+            st.image(
+                str(SILHOUETTE_PATH),
+                caption="Silhouette-score comparison across candidate k values",
+                use_container_width=True,
+            )
+        else:
+            st.info(
+                "Add `silhouette_comparison.png` to the `figures/` folder to "
+                "display the silhouette-score comparison here."
+            )
+    with silhouette_insight_column:
+        st.markdown(
+            """
+            <div class="insight-card">
+                <div class="section-kicker">Model selection evidence</div>
+                <h4>Best-separated solution</h4>
+                <p>
+                    A higher silhouette score means observations are more
+                    cohesive within their assigned cluster and better separated
+                    from other clusters. The comparison supported k=5 as the
+                    strongest tested choice, while interpretability was also
+                    checked before finalizing it.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.write("")
+    st.subheader("What the five clusters look like")
     if (FIGURES_PATH / "07_kmeans_clusters.png").exists():
         st.image(
             str(FIGURES_PATH / "07_kmeans_clusters.png"),
