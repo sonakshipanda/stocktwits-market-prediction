@@ -683,6 +683,12 @@ elif active_page == "Model Results":
     st.write("")
     st.markdown('<div class="section-kicker">Best way forward</div>', unsafe_allow_html=True)
     st.header("Use a stronger candidate—but require real out-of-sample improvement")
+    st.info(
+        "Random Forest performed best among the trained models, but it did not "
+        "outperform the majority baseline. A better next step is to test "
+        "gradient-boosted trees with walk-forward validation and retain them "
+        "only if they demonstrate consistent out-of-sample improvement."
+    )
 
     recommendation_columns = st.columns(3)
     with recommendation_columns[0]:
