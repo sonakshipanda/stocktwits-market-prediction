@@ -99,6 +99,8 @@ st.markdown(
             --bg: #F5EEE4;
             --ink: #2B2119;
             --accent: #A83B2A;
+            --accent-strong: #7F2A20;
+            --accent-soft: #C45A48;
             --muted: #7A6E62;
             --rule: #D9CFC2;
             --positive: #2E7D4F;
@@ -114,6 +116,18 @@ st.markdown(
             background: var(--bg);
             color: var(--ink);
             font-family: Calibri, "Aptos", Arial, sans-serif;
+        }
+
+        .stApp p,
+        .stApp li,
+        .stApp label,
+        .stApp div,
+        .stApp span {
+            color: var(--ink);
+        }
+
+        .stApp a {
+            color: var(--accent-strong);
         }
 
         .block-container {
@@ -176,7 +190,7 @@ st.markdown(
             align-items: center;
             gap: 0.5rem;
             margin-top: 1.3rem;
-            color: var(--accent);
+            color: var(--positive);
             font-weight: 700;
         }
 
@@ -184,13 +198,17 @@ st.markdown(
             width: 0.62rem;
             height: 0.62rem;
             border-radius: 50%;
-            background: var(--accent);
+            background: var(--positive);
+            box-shadow: 0 0 0 6px rgba(46, 125, 79, 0.12), 0 0 18px rgba(46, 125, 79, 0.38);
         }
 
         .metric-card {
             min-height: 112px;
-            padding: 1rem 0.35rem 0.65rem;
-            border-top: 1px solid var(--rule);
+            padding: 1rem 1rem 0.9rem;
+            border: 1px solid rgba(171, 153, 133, 0.7);
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.78);
+            box-shadow: 0 10px 22px rgba(70, 49, 29, 0.08), 0 2px 5px rgba(70, 49, 29, 0.04);
         }
 
         .metric-label {
@@ -203,7 +221,7 @@ st.markdown(
         }
 
         .metric-value {
-            color: var(--accent);
+            color: var(--accent-strong);
             font-family: Cambria, Georgia, serif;
             font-size: 2rem;
             font-weight: 800;
@@ -213,7 +231,7 @@ st.markdown(
 
         .metric-detail {
             margin-top: 0.45rem;
-            color: var(--muted);
+            color: #5E5449;
             font-size: 0.84rem;
         }
 
@@ -228,19 +246,21 @@ st.markdown(
 
         .insight-card, .question-card, .pipeline-card {
             height: 100%;
-            padding: 1.1rem 0;
-            border-top: 1px solid var(--rule);
+            padding: 1.15rem 1.1rem;
+            border: 1px solid rgba(171, 153, 133, 0.68);
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: 0 10px 22px rgba(70, 49, 29, 0.08), 0 2px 5px rgba(70, 49, 29, 0.04);
         }
 
         .question-card {
-            padding: 1.2rem 0 1.5rem;
-            border-bottom: 1px solid var(--rule);
+            padding: 1.2rem 1.2rem 1.35rem;
         }
 
         .question-card strong {
             display: block;
             margin-bottom: 0.4rem;
-            color: var(--accent);
+            color: var(--accent-strong);
             font-size: 0.78rem;
             letter-spacing: 0.07em;
             text-transform: uppercase;
@@ -257,7 +277,7 @@ st.markdown(
         .pipeline-number {
             display: block;
             margin-bottom: 0.85rem;
-            color: var(--accent);
+            color: var(--accent-strong);
             font-family: Cambria, Georgia, serif;
             font-size: 1.45rem;
             font-weight: 800;
@@ -265,12 +285,12 @@ st.markdown(
 
         .pipeline-card h4 {
             margin: 0 0 0.35rem;
-            color: var(--ink);
+            color: #241B15;
         }
 
         .pipeline-card p, .insight-card p {
             margin: 0;
-            color: var(--muted);
+            color: #5E5449;
             font-size: 0.91rem;
             line-height: 1.55;
         }
@@ -291,16 +311,18 @@ st.markdown(
         .result-track {
             height: 0.75rem;
             overflow: hidden;
-            background: var(--rule);
+            background: rgba(217, 207, 194, 0.85);
+            border-radius: 999px;
         }
 
         .result-fill {
             height: 100%;
-            background: var(--accent);
+            background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+            border-radius: 999px;
         }
 
         .result-fill.baseline {
-            background: var(--neutral);
+            background: linear-gradient(90deg, #B0A59A, var(--neutral));
         }
 
         .result-score {
@@ -310,8 +332,12 @@ st.markdown(
         }
 
         .finding {
-            padding: 1.15rem 0;
-            border-top: 3px solid;
+            padding: 1.15rem 1.1rem;
+            border: 1px solid rgba(171, 153, 133, 0.68);
+            border-top: 4px solid;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: 0 10px 22px rgba(70, 49, 29, 0.08), 0 2px 5px rgba(70, 49, 29, 0.04);
         }
 
         .finding.hype {
@@ -347,19 +373,21 @@ st.markdown(
 
         .finding p {
             margin: 0;
-            color: var(--ink);
+            color: #5E5449;
         }
 
         .text-note {
             margin: 1rem 0;
-            padding: 0.8rem 0;
-            border-top: 1px solid var(--rule);
-            border-bottom: 1px solid var(--rule);
+            padding: 0.95rem 1rem;
+            border: 1px solid rgba(171, 153, 133, 0.65);
+            border-radius: 0.9rem;
+            background: rgba(255, 255, 255, 0.68);
+            box-shadow: 0 8px 18px rgba(70, 49, 29, 0.06);
             color: var(--ink);
         }
 
         .text-note strong {
-            color: var(--accent);
+            color: var(--accent-strong);
         }
 
         .text-note.positive strong {
@@ -388,33 +416,65 @@ st.markdown(
         button[data-baseweb="tab"] {
             color: var(--muted);
             font-weight: 700;
+            border-radius: 999px 999px 0 0;
+            padding: 0.55rem 1rem;
         }
 
         button[data-baseweb="tab"][aria-selected="true"] {
-            color: var(--accent);
+            color: #FFFFFF;
+            background: var(--accent-strong);
+            box-shadow: 0 8px 18px rgba(127, 42, 32, 0.2);
         }
 
         div[data-baseweb="select"] > div {
-            border-color: var(--rule);
-            border-radius: 0;
-            background: transparent;
+            border-color: rgba(171, 153, 133, 0.82);
+            border-radius: 0.9rem;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 6px 16px rgba(70, 49, 29, 0.05);
+        }
+
+        div[data-baseweb="select"] input {
+            color: var(--ink);
+        }
+
+        div[data-baseweb="select"] svg {
+            color: var(--accent-strong);
         }
 
         div[data-testid="stDataFrame"] {
-            border-top: 1px solid var(--rule);
-            border-bottom: 1px solid var(--rule);
+            border: 1px solid rgba(171, 153, 133, 0.7);
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 22px rgba(70, 49, 29, 0.08), 0 2px 5px rgba(70, 49, 29, 0.04);
             overflow: hidden;
         }
 
         div[data-testid="stExpander"] {
-            border: 0;
-            border-top: 1px solid var(--rule);
-            border-radius: 0;
-            background: transparent;
+            border: 1px solid rgba(171, 153, 133, 0.7);
+            border-radius: 0.9rem;
+            background: rgba(255, 255, 255, 0.68);
+            box-shadow: 0 8px 18px rgba(70, 49, 29, 0.05);
+        }
+
+        div[data-testid="stExpander"] details > summary {
+            border-radius: 0.9rem;
         }
 
         hr {
             border-color: var(--rule) !important;
+        }
+
+        .stButton > button {
+            border-radius: 999px;
+            border: 1px solid rgba(171, 153, 133, 0.8);
+            background: rgba(255, 255, 255, 0.84);
+            color: var(--ink);
+            box-shadow: 0 6px 14px rgba(70, 49, 29, 0.05);
+        }
+
+        .stButton > button:hover {
+            border-color: var(--accent-soft);
+            color: var(--accent-strong);
         }
 
         @media (max-width: 760px) {
@@ -433,6 +493,21 @@ st.markdown(
             .result-track {
                 grid-column: 1 / -1;
                 grid-row: 2;
+            }
+
+            .metric-card,
+            .insight-card,
+            .question-card,
+            .pipeline-card,
+            .finding,
+            .text-note,
+            div[data-testid="stDataFrame"],
+            div[data-testid="stExpander"] {
+                border-radius: 0.8rem;
+            }
+
+            button[data-baseweb="tab"] {
+                padding: 0.45rem 0.8rem;
             }
         }
     </style>
