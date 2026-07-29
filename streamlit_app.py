@@ -91,29 +91,6 @@ FIGURE_DETAILS = {
     },
 }
 
-SILHOUETTE_FILENAMES = (
-    "silhouette_comparison.png",
-    "silhoutte_comparison.png",
-)
-SILHOUETTE_PATH = next(
-    (
-        FIGURES_PATH / file_name
-        for file_name in SILHOUETTE_FILENAMES
-        if (FIGURES_PATH / file_name).exists()
-    ),
-    None,
-)
-if SILHOUETTE_PATH is not None:
-    FIGURE_DETAILS[SILHOUETTE_PATH.name] = {
-        "title": "Silhouette score comparison",
-        "eyebrow": "Choosing the cluster count",
-        "insight": (
-            "Higher silhouette scores indicate more clearly separated clusters. "
-            "Among the tested values, k=5 produced the strongest separation and "
-            "provided quantitative support for the final cluster count."
-        ),
-    }
-
 
 st.markdown(
     """
@@ -386,12 +363,6 @@ st.markdown(
             overflow: hidden;
         }
 
-        div[data-testid="stButton"] > button {
-            min-height: 2.75rem;
-            border-radius: 12px;
-            font-weight: 700;
-        }
-
         @media (max-width: 760px) {
             .block-container {
                 padding-top: 1rem;
@@ -451,10 +422,6 @@ def result_bars(metric: str) -> None:
     st.markdown("".join(rows), unsafe_allow_html=True)
 
 
-def select_page(page_name: str) -> None:
-    st.session_state.dashboard_page = page_name
-
-
 st.markdown(
     """
     <div class="hero">
@@ -485,79 +452,17 @@ with metric_columns[2]:
 with metric_columns[3]:
     metric_card("Best trained model", "52.6%", "Random Forest accuracy")
 
-PAGES = [
-    "Project Overview",
-    "Model Results",
-    "K-Means Findings",
-    "Limitations & Next Steps",
-]
-if st.session_state.get("dashboard_page") not in PAGES:
-    st.session_state.dashboard_page = PAGES[0]
-
-st.write("")
-navigation_columns = st.columns([1.2, 1, 1.05, 0.9])
-for column, page_name in zip(navigation_columns, PAGES):
-    with column:
-        st.button(
-            page_name,
-            key=f"nav_{page_name}",
-            type=(
-                "primary"
-                if st.session_state.dashboard_page == page_name
-                else "secondary"
-            ),
-            use_container_width=True,
-            on_click=select_page,
-            args=(page_name,),
-        )
-
-active_page = st.session_state.dashboard_page
-
-if active_page == "Project Overview":
-    st.write("")
-    st.markdown('<div class="section-kicker">Start here</div>', unsafe_allow_html=True)
-    st.header("The project story in four steps")
-    st.caption(
-        "This page explains the question, data, test, and conclusion before "
-        "showing the supporting charts."
-    )
-
-    story_columns = st.columns(4)
-    story_steps = [
-        (
-            "01",
-            "Question",
-            "Can daily StockTwits sentiment help predict whether a stock will rise the next trading day?",
-        ),
-        (
-            "02",
-            "Data",
-            "We combined 4.2 million posts with daily prices for AAPL, AMZN, NVDA, and TSLA.",
-        ),
-        (
-            "03",
-            "Test",
-            "We trained two prediction models and compared them with a simple majority baseline.",
-        ),
-        (
-            "04",
-            "Answer",
-            "The models found patterns, but neither predicted next-day direction reliably.",
-        ),
+overview_tab, results_tab, figures_tab, clusters_tab, limits_tab = st.tabs(
+    [
+        "Overview",
+        "Model Results",
+        "Chart Explorer",
+        "K-Means Finding",
+        "Limitations",
     ]
-    for column, (number, title, description) in zip(story_columns, story_steps):
-        with column:
-            st.markdown(
-                f"""
-                <div class="pipeline-card">
-                    <div class="pipeline-number">{number}</div>
-                    <h4>{title}</h4>
-                    <p>{description}</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+)
 
+with overview_tab:
     st.write("")
     st.markdown('<div class="section-kicker">Research question</div>', unsafe_allow_html=True)
     st.markdown(
@@ -574,28 +479,28 @@ if active_page == "Project Overview":
     )
 
     st.write("")
-    st.subheader("How we turned the data into a fair test")
+    st.subheader("From millions of posts to one testable question")
     pipeline_columns = st.columns(4)
     pipeline_steps = [
         (
             "01",
-            "Prepare",
-            "Clean posts and prices, remove invalid records, and align each observation by ticker and date.",
+            "Clean",
+            "Standardize prices and millions of StockTwits posts while removing invalid records.",
         ),
         (
             "02",
-            "Summarize",
-            "Turn individual posts into daily measures such as bullish share and post volume.",
+            "Aggregate",
+            "Convert tagged posts into daily bullish, bearish, volume, and change features.",
         ),
         (
             "03",
-            "Predict",
-            "Train Logistic Regression and Random Forest using earlier dates for training.",
+            "Model",
+            "Train Logistic Regression and Random Forest with a chronological split.",
         ),
         (
             "04",
-            "Check",
-            "Test on later dates, compare with a simple baseline, and explore groups of similar trading days.",
+            "Evaluate",
+            "Compare against a majority baseline and inspect behavior clusters.",
         ),
     ]
     for column, (number, title, description) in zip(pipeline_columns, pipeline_steps):
@@ -610,60 +515,6 @@ if active_page == "Project Overview":
                 """,
                 unsafe_allow_html=True,
             )
-
-    with st.expander("Plain-language glossary"):
-        st.markdown(
-            """
-            - **Sentiment:** whether a StockTwits user labeled a post Bullish or Bearish.
-            - **Next-day direction:** whether the stock closed higher or lower on the next trading day.
-            - **Majority baseline:** a simple reference that always predicts the most common outcome.
-            - **K-Means:** a method that groups similar trading days without trying to predict an answer.
-            """
-        )
-
-    st.write("")
-    st.markdown('<div class="section-kicker">Supporting evidence</div>', unsafe_allow_html=True)
-    st.header("Explore the project visuals")
-    st.caption(
-        "Choose a chart for a presentation-friendly view and a short interpretation."
-    )
-
-    available_figures = [
-        file_name
-        for file_name in FIGURE_DETAILS
-        if (FIGURES_PATH / file_name).exists()
-    ]
-    if available_figures:
-        selected_figure = st.selectbox(
-            "Choose a chart",
-            available_figures,
-            format_func=lambda file_name: FIGURE_DETAILS[file_name]["title"],
-        )
-        details = FIGURE_DETAILS[selected_figure]
-
-        chart_column, insight_column = st.columns([2.1, 1])
-        with chart_column:
-            st.image(
-                str(FIGURES_PATH / selected_figure),
-                caption=details["title"],
-                use_container_width=True,
-            )
-        with insight_column:
-            st.markdown(
-                f"""
-                <div class="insight-card">
-                    <div class="section-kicker">{details["eyebrow"]}</div>
-                    <h4>{details["title"]}</h4>
-                    <p>{details["insight"]}</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-    else:
-        st.warning(
-            "The dashboard is working, but no project figures were found in "
-            "the `figures/` folder."
-        )
 
     st.write("")
     left_column, right_column = st.columns([1.35, 1])
@@ -695,21 +546,10 @@ if active_page == "Project Overview":
             unsafe_allow_html=True,
         )
 
-    st.success(
-        "Main takeaway: StockTwits sentiment showed interesting patterns, but "
-        "it did not make next-day market direction reliably predictable in "
-        "this experiment."
-    )
-
-elif active_page == "Model Results":
+with results_tab:
     st.write("")
     st.markdown('<div class="section-kicker">Supervised learning</div>', unsafe_allow_html=True)
-    st.header("Did the prediction models beat a simple guess? No.")
-    st.write(
-        "The majority baseline always predicts the most common result—an up "
-        "day. A useful model should consistently perform better than that "
-        "simple rule on unseen dates."
-    )
+    st.header("The baseline remained the hardest model to beat")
 
     result_metrics = st.columns(3)
     with result_metrics[0]:
@@ -759,7 +599,7 @@ elif active_page == "Model Results":
     st.dataframe(
         formatted_results,
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
         height=145,
     )
 
@@ -768,140 +608,62 @@ elif active_page == "Model Results":
         "predictive signal in the current combined experiment."
     )
 
+with figures_tab:
     st.write("")
-    st.markdown('<div class="section-kicker">Best way forward</div>', unsafe_allow_html=True)
-    st.header("Use a stronger candidate—but require real out-of-sample improvement")
-    st.info(
-        "Random Forest performed best among the trained models, but it did not "
-        "outperform the majority baseline. A better next step is to test "
-        "gradient-boosted trees with walk-forward validation and retain them "
-        "only if they demonstrate consistent out-of-sample improvement."
+    st.markdown('<div class="section-kicker">Interactive gallery</div>', unsafe_allow_html=True)
+    st.header("Explore the project visuals")
+    st.caption(
+        "Choose one chart at a time for a presentation-friendly view and a short interpretation."
     )
 
-    recommendation_columns = st.columns(3)
-    with recommendation_columns[0]:
-        st.markdown(
-            """
-            <div class="insight-card">
-                <div class="section-kicker">Current winner</div>
-                <h4>Random Forest</h4>
-                <p>
-                    It is the best trained model by accuracy at 52.6%, but it
-                    still trails the 53.6% majority baseline and should not be
-                    used for live trading.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
+    available_figures = [
+        file_name
+        for file_name in FIGURE_DETAILS
+        if (FIGURES_PATH / file_name).exists()
+    ]
+    if available_figures:
+        selected_figure = st.selectbox(
+            "Choose a chart",
+            available_figures,
+            format_func=lambda file_name: FIGURE_DETAILS[file_name]["title"],
         )
-    with recommendation_columns[1]:
-        st.markdown(
-            """
-            <div class="insight-card">
-                <div class="section-kicker">Next model to test</div>
-                <h4>Gradient-boosted trees</h4>
-                <p>
-                    XGBoost or LightGBM is the strongest next candidate for
-                    nonlinear interactions among market and sentiment features.
-                    This is a recommendation—not a validated result.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with recommendation_columns[2]:
-        st.markdown(
-            """
-            <div class="insight-card">
-                <div class="section-kicker">Validation rule</div>
-                <h4>Walk-forward testing</h4>
-                <p>
-                    Compare market-only, sentiment-only, and combined models
-                    across future time windows. Keep a model only if its
-                    improvement is consistent across dates and tickers.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        details = FIGURE_DETAILS[selected_figure]
 
-    st.warning(
-        "Best decision today: do not deploy any current model as a trading "
-        "system. The next model must beat the baseline on unseen future data, "
-        "not just during tuning."
-    )
-    st.success(
-        "Main takeaway: Random Forest was the best model we trained, but its "
-        "52.6% accuracy still fell below the 53.6% majority baseline."
-    )
+        chart_column, insight_column = st.columns([2.1, 1])
+        with chart_column:
+            st.image(
+                str(FIGURES_PATH / selected_figure),
+                caption=details["title"],
+                width="stretch",
+            )
+        with insight_column:
+            st.markdown(
+                f"""
+                <div class="insight-card">
+                    <div class="section-kicker">{details["eyebrow"]}</div>
+                    <h4>{details["title"]}</h4>
+                    <p>{details["insight"]}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
-elif active_page == "K-Means Findings":
+        with st.expander("Show all figure files"):
+            for file_name in available_figures:
+                st.markdown(f"- `{file_name}` — {FIGURE_DETAILS[file_name]['title']}")
+    else:
+        st.error("No project figures were found in the `figures/` folder.")
+
+with clusters_tab:
     st.write("")
     st.markdown('<div class="section-kicker">Unsupervised learning</div>', unsafe_allow_html=True)
-    st.header("What types of trading days appeared in the data?")
-    st.info(
-        "K-Means does not predict whether a stock will go up or down. It simply "
-        "groups trading days that look similar, allowing us to explore patterns."
-    )
+    st.header("The loudest days showed a small contrarian tilt")
     st.write(
         "K-Means grouped ticker-days using bullish share, log post volume, "
         "same-day return, and intraday range. Next-day return was held out and "
         "measured only after the clusters were formed."
     )
 
-    st.write("")
-    st.subheader("1. Why we selected five clusters")
-    st.caption(
-        "The silhouette score measures how clearly the groups are separated. "
-        "A higher score indicates a cleaner grouping."
-    )
-    silhouette_chart_column, silhouette_insight_column = st.columns([1.7, 1])
-    with silhouette_chart_column:
-        if SILHOUETTE_PATH is not None:
-            st.image(
-                str(SILHOUETTE_PATH),
-                caption="Silhouette-score comparison across candidate k values",
-                use_container_width=True,
-            )
-        else:
-            st.info(
-                "Add `silhouette_comparison.png` to the `figures/` folder to "
-                "display the silhouette-score comparison here."
-            )
-    with silhouette_insight_column:
-        st.markdown(
-            """
-            <div class="insight-card">
-                <div class="section-kicker">Model selection evidence</div>
-                <h4>Best-separated solution</h4>
-                <p>
-                    A higher silhouette score means observations are more
-                    cohesive within their assigned cluster and better separated
-                    from other clusters. The comparison supported k=5 as the
-                    strongest tested choice, while interpretability was also
-                    checked before finalizing it.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    st.write("")
-    st.subheader("2. What the five clusters look like")
-    if (FIGURES_PATH / "07_kmeans_clusters.png").exists():
-        st.image(
-            str(FIGURES_PATH / "07_kmeans_clusters.png"),
-            caption="Five K-Means behavior clusters",
-            use_container_width=True,
-        )
-    else:
-        st.info(
-            "Add `07_kmeans_clusters.png` to the `figures/` folder to display "
-            "the cluster chart here."
-        )
-
-    st.write("")
-    st.subheader("3. What patterns stood out")
     finding_columns = st.columns(2)
     with finding_columns[0]:
         st.markdown(
@@ -926,17 +688,19 @@ elif active_page == "K-Means Findings":
             unsafe_allow_html=True,
         )
 
+    st.write("")
+    if (FIGURES_PATH / "07_kmeans_clusters.png").exists():
+        st.image(
+            str(FIGURES_PATH / "07_kmeans_clusters.png"),
+            caption="Five K-Means behavior clusters",
+            width="stretch",
+        )
     st.warning(
         "This is an association in the analyzed sample. The clusters were not "
         "tested as an out-of-sample trading strategy."
     )
-    st.success(
-        "Main takeaway: five clusters gave the clearest grouping of the tested "
-        "choices and revealed descriptive patterns, but they do not prove that "
-        "sentiment predicts future returns."
-    )
 
-elif active_page == "Limitations & Next Steps":
+with limits_tab:
     st.write("")
     st.markdown('<div class="section-kicker">Responsible interpretation</div>', unsafe_allow_html=True)
     st.header("What this project can—and cannot—claim")
@@ -967,49 +731,9 @@ elif active_page == "Limitations & Next Steps":
             """
         )
 
-    st.write("")
-    st.markdown('<div class="section-kicker">Bias and mitigation</div>', unsafe_allow_html=True)
-    st.header("Where bias can enter the analysis")
-
-    bias_mitigations = pd.DataFrame(
-        {
-            "Potential bias": [
-                "Platform selection",
-                "Self-reported labels",
-                "Ticker selection",
-                "Time-period / market regime",
-                "Class imbalance",
-                "Timing and leakage",
-            ],
-            "Why it matters": [
-                "StockTwits users may not represent all investors.",
-                "Bullish and Bearish tags can be missing, sarcastic, or incorrect.",
-                "Four popular technology stocks may not represent the wider market.",
-                "The 2020–2022 period includes unusual volatility and retail activity.",
-                "Up days and bullish labels are more common, which can inflate accuracy.",
-                "UTC dates or future-derived features can mix information across trading sessions.",
-            ],
-            "Mitigation": [
-                "Compare multiple social platforms and news sources.",
-                "Validate a hand-labeled sample and test a text-based sentiment model.",
-                "Add more sectors, company sizes, and per-ticker reporting.",
-                "Use multiple market regimes and rolling walk-forward evaluation.",
-                "Report balanced accuracy, ROC-AUC, and class-specific precision/recall.",
-                "Align posts to market cutoffs and fit every transformation on training data only.",
-            ],
-        }
-    )
-    st.dataframe(
-        bias_mitigations,
-        hide_index=True,
-        use_container_width=True,
-        height=320,
-    )
-
     st.success(
-        "Main takeaway: the negative result is still useful. It shows why the "
-        "current evidence should not be treated as a dependable next-day "
-        "trading signal and identifies what a stronger follow-up test requires."
+        "Responsible takeaway: the negative result is useful. It cautions "
+        "against treating crowd sentiment as a dependable next-day trading signal."
     )
 
 st.markdown(
