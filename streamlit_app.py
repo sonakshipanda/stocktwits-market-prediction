@@ -95,62 +95,78 @@ FIGURE_DETAILS = {
 st.markdown(
     """
     <style>
+        :root {
+            --bg: #F5EEE4;
+            --ink: #2B2119;
+            --accent: #A83B2A;
+            --muted: #7A6E62;
+            --rule: #D9CFC2;
+            --positive: #2E7D4F;
+            --negative: #B3372B;
+            --neutral: #9C9081;
+            --aapl: #1F77B4;
+            --amzn: #FF7F0E;
+            --nvda: #2CA02C;
+            --tsla: #D62728;
+        }
+
         .stApp {
-            background:
-                radial-gradient(circle at 90% 0%, rgba(20, 184, 166, 0.10), transparent 24rem),
-                #f7f9fc;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: Calibri, "Aptos", Arial, sans-serif;
         }
 
         .block-container {
             max-width: 1180px;
-            padding-top: 2.4rem;
+            padding-top: 2.8rem;
             padding-bottom: 3rem;
         }
 
         h1, h2, h3 {
-            color: #172033;
-            letter-spacing: -0.025em;
+            color: var(--accent) !important;
+            font-family: Cambria, Georgia, serif !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.015em;
+        }
+
+        h4 {
+            color: var(--ink);
+            font-family: Cambria, Georgia, serif;
+        }
+
+        p, li, label, div[data-testid="stCaptionContainer"] {
+            color: var(--ink);
         }
 
         .hero {
-            position: relative;
-            overflow: hidden;
-            padding: 2.2rem 2.4rem;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
-            background:
-                radial-gradient(circle at 92% 20%, rgba(45, 212, 191, 0.35), transparent 16rem),
-                linear-gradient(125deg, #101827 0%, #153142 58%, #0f766e 120%);
-            color: white;
-            box-shadow: 0 22px 55px rgba(15, 23, 42, 0.16);
+            max-width: 900px;
+            padding: 0.4rem 0 2rem 1.4rem;
+            border-left: 5px solid var(--accent);
+            border-bottom: 1px solid var(--rule);
         }
 
         .hero-badge {
             display: inline-block;
-            margin-bottom: 1rem;
-            padding: 0.35rem 0.72rem;
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.09);
-            color: #ccfbf1;
+            margin-bottom: 0.8rem;
+            color: var(--accent);
             font-size: 0.78rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
         .hero h1 {
             max-width: 760px;
             margin: 0;
-            color: white;
+            color: var(--accent) !important;
             font-size: clamp(2.1rem, 4.5vw, 4rem);
-            line-height: 1.02;
+            line-height: 1.06;
         }
 
         .hero p {
             max-width: 760px;
             margin: 1rem 0 0;
-            color: #dbeafe;
+            color: var(--ink);
             font-size: 1.08rem;
             line-height: 1.65;
         }
@@ -160,7 +176,7 @@ st.markdown(
             align-items: center;
             gap: 0.5rem;
             margin-top: 1.3rem;
-            color: #a7f3d0;
+            color: var(--accent);
             font-weight: 700;
         }
 
@@ -168,22 +184,18 @@ st.markdown(
             width: 0.62rem;
             height: 0.62rem;
             border-radius: 50%;
-            background: #34d399;
-            box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+            background: var(--accent);
         }
 
         .metric-card {
-            min-height: 132px;
-            padding: 1.15rem 1.2rem;
-            border: 1px solid #e5eaf1;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.92);
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            min-height: 112px;
+            padding: 1rem 0.35rem 0.65rem;
+            border-top: 1px solid var(--rule);
         }
 
         .metric-label {
             margin-bottom: 0.45rem;
-            color: #64748b;
+            color: var(--muted);
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.06em;
@@ -191,7 +203,8 @@ st.markdown(
         }
 
         .metric-value {
-            color: #172033;
+            color: var(--accent);
+            font-family: Cambria, Georgia, serif;
             font-size: 2rem;
             font-weight: 800;
             letter-spacing: -0.04em;
@@ -200,13 +213,13 @@ st.markdown(
 
         .metric-detail {
             margin-top: 0.45rem;
-            color: #64748b;
+            color: var(--muted);
             font-size: 0.84rem;
         }
 
         .section-kicker {
             margin-bottom: 0.25rem;
-            color: #0f766e;
+            color: var(--accent);
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.09em;
@@ -215,52 +228,49 @@ st.markdown(
 
         .insight-card, .question-card, .pipeline-card {
             height: 100%;
-            padding: 1.25rem;
-            border: 1px solid #e4e9f0;
-            border-radius: 18px;
-            background: white;
+            padding: 1.1rem 0;
+            border-top: 1px solid var(--rule);
         }
 
         .question-card {
-            border-left: 5px solid #14b8a6;
+            padding: 1.2rem 0 1.5rem;
+            border-bottom: 1px solid var(--rule);
         }
 
         .question-card strong {
             display: block;
             margin-bottom: 0.4rem;
-            color: #0f766e;
+            color: var(--accent);
             font-size: 0.78rem;
             letter-spacing: 0.07em;
             text-transform: uppercase;
         }
 
         .question-card span {
-            color: #172033;
+            color: var(--ink);
+            font-family: Cambria, Georgia, serif;
             font-size: 1.25rem;
             font-weight: 700;
             line-height: 1.45;
         }
 
         .pipeline-number {
-            display: inline-grid;
-            width: 2rem;
-            height: 2rem;
+            display: block;
             margin-bottom: 0.85rem;
-            place-items: center;
-            border-radius: 10px;
-            background: #ccfbf1;
-            color: #0f766e;
+            color: var(--accent);
+            font-family: Cambria, Georgia, serif;
+            font-size: 1.45rem;
             font-weight: 800;
         }
 
         .pipeline-card h4 {
             margin: 0 0 0.35rem;
-            color: #172033;
+            color: var(--ink);
         }
 
         .pipeline-card p, .insight-card p {
             margin: 0;
-            color: #64748b;
+            color: var(--muted);
             font-size: 0.91rem;
             line-height: 1.55;
         }
@@ -274,49 +284,46 @@ st.markdown(
         }
 
         .result-model {
-            color: #334155;
+            color: var(--ink);
             font-weight: 700;
         }
 
         .result-track {
             height: 0.75rem;
             overflow: hidden;
-            border-radius: 999px;
-            background: #e8edf3;
+            background: var(--rule);
         }
 
         .result-fill {
             height: 100%;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #14b8a6, #2dd4bf);
+            background: var(--accent);
         }
 
         .result-fill.baseline {
-            background: linear-gradient(90deg, #64748b, #94a3b8);
+            background: var(--neutral);
         }
 
         .result-score {
-            color: #172033;
+            color: var(--ink);
             font-weight: 800;
             text-align: right;
         }
 
         .finding {
-            padding: 1.35rem;
-            border-radius: 18px;
-            color: #f8fafc;
+            padding: 1.15rem 0;
+            border-top: 3px solid;
         }
 
         .finding.hype {
-            background: linear-gradient(145deg, #9f1239, #e11d48);
+            border-color: var(--negative);
         }
 
         .finding.panic {
-            background: linear-gradient(145deg, #065f46, #0f9f78);
+            border-color: var(--positive);
         }
 
         .finding-label {
-            color: rgba(255, 255, 255, 0.75);
+            color: var(--muted);
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.08em;
@@ -325,42 +332,89 @@ st.markdown(
 
         .finding-value {
             margin: 0.3rem 0;
-            color: white;
+            font-family: Cambria, Georgia, serif;
             font-size: 2rem;
             font-weight: 800;
         }
 
+        .finding.hype .finding-value {
+            color: var(--negative);
+        }
+
+        .finding.panic .finding-value {
+            color: var(--positive);
+        }
+
         .finding p {
             margin: 0;
-            color: rgba(255, 255, 255, 0.88);
+            color: var(--ink);
+        }
+
+        .text-note {
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+            color: var(--ink);
+        }
+
+        .text-note strong {
+            color: var(--accent);
+        }
+
+        .text-note.positive strong {
+            color: var(--positive);
+        }
+
+        .text-note.negative strong {
+            color: var(--negative);
         }
 
         .footer {
             margin-top: 2.5rem;
             padding-top: 1.25rem;
-            border-top: 1px solid #e2e8f0;
-            color: #64748b;
+            border-top: 1px solid var(--rule);
+            color: var(--muted);
             font-size: 0.85rem;
             text-align: center;
         }
 
         div[data-baseweb="tab-list"] {
-            gap: 0.35rem;
+            gap: 1.2rem;
             margin-top: 1rem;
-            padding: 0.35rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            background: white;
+            border-bottom: 1px solid var(--rule);
         }
 
         button[data-baseweb="tab"] {
-            border-radius: 10px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        button[data-baseweb="tab"][aria-selected="true"] {
+            color: var(--accent);
+        }
+
+        div[data-baseweb="select"] > div {
+            border-color: var(--rule);
+            border-radius: 0;
+            background: transparent;
         }
 
         div[data-testid="stDataFrame"] {
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
             overflow: hidden;
+        }
+
+        div[data-testid="stExpander"] {
+            border: 0;
+            border-top: 1px solid var(--rule);
+            border-radius: 0;
+            background: transparent;
+        }
+
+        hr {
+            border-color: var(--rule) !important;
         }
 
         @media (max-width: 760px) {
@@ -369,8 +423,7 @@ st.markdown(
             }
 
             .hero {
-                padding: 1.6rem 1.25rem;
-                border-radius: 18px;
+                padding: 0.2rem 0 1.5rem 1rem;
             }
 
             .result-bar-row {
@@ -395,6 +448,17 @@ def metric_card(label: str, value: str, detail: str) -> None:
             <div class="metric-label">{label}</div>
             <div class="metric-value">{value}</div>
             <div class="metric-detail">{detail}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def text_note(label: str, message: str, tone: str = "") -> None:
+    st.markdown(
+        f"""
+        <div class="text-note {tone}">
+            <strong>{label}</strong> {message}
         </div>
         """,
         unsafe_allow_html=True,
@@ -603,9 +667,10 @@ with results_tab:
         height=145,
     )
 
-    st.info(
-        "Main finding: StockTwits sentiment did not add a reliable next-day "
-        "predictive signal in the current combined experiment."
+    text_note(
+        "Main finding:",
+        "StockTwits sentiment did not add a reliable next-day predictive "
+        "signal in the current combined experiment.",
     )
 
 with figures_tab:
@@ -695,9 +760,11 @@ with clusters_tab:
             caption="Five K-Means behavior clusters",
             width="stretch",
         )
-    st.warning(
+    text_note(
+        "Interpret carefully:",
         "This is an association in the analyzed sample. The clusters were not "
-        "tested as an out-of-sample trading strategy."
+        "tested as an out-of-sample trading strategy.",
+        "negative",
     )
 
 with limits_tab:
@@ -731,9 +798,11 @@ with limits_tab:
             """
         )
 
-    st.success(
-        "Responsible takeaway: the negative result is useful. It cautions "
-        "against treating crowd sentiment as a dependable next-day trading signal."
+    text_note(
+        "Responsible takeaway:",
+        "The negative result is useful. It cautions against treating crowd "
+        "sentiment as a dependable next-day trading signal.",
+        "positive",
     )
 
 st.markdown(
