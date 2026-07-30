@@ -80,6 +80,16 @@ FIGURE_DETAILS = {
             "This visual foreshadows the near-chance supervised model results."
         ),
     },
+    "silhouette_comparison.png": {
+        "title": "Silhouette score comparison",
+        "eyebrow": "Choosing k",
+        "insight": (
+            "Among the tested values, k = 5 produced the highest silhouette "
+            "score (0.330), compared with 0.311 for k = 4 and 0.265 for k = 3. "
+            "This indicates the clearest separation between clusters and "
+            "supports the choice of five behavior groups."
+        ),
+    },
     "07_kmeans_clusters.png": {
         "title": "K-Means behavior clusters",
         "eyebrow": "Unsupervised finding",
@@ -804,6 +814,37 @@ with clusters_tab:
         "measured only after the clusters were formed."
     )
 
+    st.write("")
+    st.subheader("Why we chose five clusters")
+    silhouette_chart, silhouette_explanation = st.columns([1.7, 1])
+    with silhouette_chart:
+        if (FIGURES_PATH / "silhouette_comparison.png").exists():
+            st.image(
+                str(FIGURES_PATH / "silhouette_comparison.png"),
+                caption="Silhouette scores for the tested values of k",
+                width="stretch",
+            )
+    with silhouette_explanation:
+        st.markdown(
+            """
+            <div class="insight-card">
+                <div class="section-kicker">Model selection</div>
+                <h4>k = 5 had the strongest separation</h4>
+                <p>
+                    The silhouette score increased from <strong>0.265</strong>
+                    at k = 3 to <strong>0.311</strong> at k = 4, then reached
+                    its highest tested value of <strong>0.330</strong> at
+                    k = 5. Because higher values indicate more distinct,
+                    cohesive clusters, this result supports using five
+                    behavior groups.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.write("")
+    st.subheader("What the five clusters revealed")
     finding_columns = st.columns(2)
     with finding_columns[0]:
         st.markdown(
@@ -845,46 +886,45 @@ with clusters_tab:
 with limits_tab:
     st.write("")
     st.markdown('<div class="section-kicker">Responsible interpretation</div>', unsafe_allow_html=True)
-    st.header("What this project can—and cannot—claim")
+    st.header("How bias changes what this project can claim")
 
     limitation_column, next_step_column = st.columns(2)
     with limitation_column:
-        st.subheader("Current limitations")
+        st.subheader("Where bias enters the pipeline")
         st.markdown(
             """
-            - Only four large-cap U.S. stocks are included.
-            - User-supplied sentiment labels may be missing, sarcastic, or noisy.
-            - Posts are grouped by UTC date rather than U.S. market sessions.
-            - The combined model has not yet been compared with controlled
-              market-only and sentiment-only experiments.
-            - News headlines were cleaned but not used in the current models.
-            - No out-of-sample trading strategy or transaction costs were tested.
+            - **Platform bias:** StockTwits leans bullish, so raw sentiment alone is not a neutral signal.
+            - **Sampling bias:** The sample covers only four large-cap U.S. technology stocks.
+            - **Self-reported labels:** Bullish and bearish tags can be missing, sarcastic, or noisy.
+            - **Timing and leakage:** Grouping by UTC date can blur U.S. market sessions and let future information slip in.
+            - **Scope bias:** The current models do not yet isolate market-only, sentiment-only, and combined effects.
+            - **Trading bias:** No out-of-sample trading strategy or transaction costs were tested.
             """
         )
     with next_step_column:
-        st.subheader("Best next experiments")
+        st.subheader("How we mitigate it next")
         st.markdown(
             """
-            1. Compare market-only, sentiment-only, and combined features.
-            2. Align posts to U.S. market sessions and trading-day cutoffs.
-            3. Test longer horizons such as weekly direction.
-            4. Expand to more sectors and smaller-cap stocks.
-            5. Train a text classifier and compare social sentiment with news.
+            1. Compare market-only, sentiment-only, and combined features against the same baseline.
+            2. Align posts to U.S. market sessions and trading-day cutoffs to reduce leakage.
+            3. Treat unlabeled or noisy posts carefully instead of assuming they are ground truth.
+            4. Expand to more sectors and smaller-cap stocks to reduce sampling bias.
+            5. Test longer horizons, such as weekly direction, before making trading claims.
             """
         )
 
     text_note(
         "Responsible takeaway:",
-        "The negative result is useful. It cautions against treating crowd "
-        "sentiment as a dependable next-day trading signal.",
+        "The main lesson is not that sentiment is useless, but that bias controls "
+        "whether the model is measuring signal, noise, or leakage.",
         "positive",
     )
 
 st.markdown(
     """
     <div class="footer">
-        AI4ALL Ignite · Group 04 · Educational research dashboard ·
-        Not financial advice
+           · AI4ALL Ignite · Group 04 · 
+            <br><strong>Team:</strong> Jasleen Kaur · David Mora · Sonakshi Panda · Shana Ibatuan
     </div>
     """,
     unsafe_allow_html=True,
