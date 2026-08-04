@@ -1,4 +1,4 @@
-# Using NLP and StockTwits to Predict Market Data
+# The Signal and the Noise: Measuring Market Influence
 
 **AI4ALL Ignite, Group 04**
 Jasleen Kaur · David Mora · Sonakshi Panda · Shana Ibatuan
