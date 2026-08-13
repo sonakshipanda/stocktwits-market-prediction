@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Signal and the Noise</title>
+
+    <meta
+        name="description"
+        content="Can social media sentiment predict the stock market? An AI4ALL Ignite research project analyzing StockTwits sentiment and market behavior."
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= NAVIGATION ================= -->
+
+    <nav class="nav">
+        <a href="#top" class="nav-brand">The Signal and the Noise</a>
+
+        <div class="nav-links">
+            <a href="#question">Question</a>
+            <a href="#data">Data</a>
+            <a href="#results">Results</a>
+            <a href="#impact">Impact</a>
+            <a
+                href="https://github.com/sonakshipanda/stocktwits-market-prediction"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                GitHub ↗
+            </a>
+        </div>
+    </nav>
+
+
+    <main id="top">
+
+        <!-- ================= HERO ================= -->
+
+        <header class="hero section">
+
+            <p class="eyebrow">AI4ALL IGNITE · GROUP 04</p>
+
+            <h1>
+                The Signal
+                <span class="accent">&amp;</span>
+                the Noise
+            </h1>
+
+            <p class="hero-subtitle">
+                Measuring whether online investor sentiment carries a
+                meaningful signal about what the stock market does next.
+            </p>
+
+            <p class="authors">
+                Jasleen Kaur · David Mora · Sonakshi Panda · Shana Ibatuan
+            </p>
+
+            <div class="hero-links">
+                <a
+                    class="text-link accent-link"
+                    href="https://stocktwits-market-prediction.streamlit.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Explore the interactive dashboard →
+                </a>
+
+                <a
+                    class="text-link"
+                    href="https://github.com/sonakshipanda/stocktwits-market-prediction"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View the repository →
+                </a>
+            </div>
+
+        </header>
+
+
+        <!-- ================= RESEARCH QUESTION ================= -->
+
+        <section id="question" class="section">
+
+            <p class="section-number">01 · Research Question</p>
+
+            <h2>Can the crowd tell us what happens next?</h2>
+
+            <p class="lead">
+                StockTwits gives investors a place to discuss individual
+                stocks and label their own posts as bullish or bearish.
+                We wanted to know whether that collective sentiment contains
+                information about future market movement — or whether it is
+                mostly noise.
+            </p>
+
+            <blockquote>
+                Can StockTwits sentiment help predict the future direction
+                of U.S. stocks?
+            </blockquote>
+
+        </section>
+
+
+        <!-- ================= DATA ================= -->
+
+        <section id="data" class="section">
+
+            <p class="section-number">02 · The Data</p>
+
+            <div class="section-heading-row">
+                <h2>Millions of opinions. One question.</h2>
+
+                <p class="section-description">
+                    We combine investor sentiment with historical market data,
+                    align observations by ticker and trading date, and study
+                    whether today's activity tells us anything useful about
+                    tomorrow.
+                </p>
+            </div>
+
+
+            <div class="stat-row">
+
+                <div class="stat">
+                    <span class="stat-value">4.2M+</span>
+                    <span class="stat-label">StockTwits posts analyzed</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-value">2020–22</span>
+                    <span class="stat-label">StockTwits coverage</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">Stocks in final analysis*</span>
+                </div>
+
+            </div>
+
+            <p class="footnote">
+                *Final ticker selection is being updated. Results on this
+                website will be refreshed after the revised analysis is run.
+            </p>
+
+
+            <!-- STOCK LEGEND -->
+
+            <div class="ticker-legend">
+
+                <span class="ticker">
+                    <span class="ticker-dot aapl"></span>
+                    AAPL
+                </span>
+
+                <span class="ticker">
+                    <span class="ticker-dot amzn"></span>
+                    AMZN
+                </span>
+
+                <span class="ticker">
+                    <span class="ticker-dot nvda"></span>
+                    NVDA
+                </span>
+
+                <span class="ticker">
+                    <span class="ticker-dot upcoming"></span>
+                    FINAL STOCK TBD
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= METHODS ================= -->
+
+        <section class="section">
+
+            <p class="section-number">03 · Method</p>
+
+            <h2>Prediction and pattern discovery</h2>
+
+
+            <div class="method">
+
+                <span class="method-number">01</span>
+
+                <div>
+                    <h3>Build daily market and sentiment features</h3>
+
+                    <p>
+                        Investor activity is summarized by ticker and day,
+                        then aligned with price movement, trading volume,
+                        volatility, and related market features.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="method">
+
+                <span class="method-number">02</span>
+
+                <div>
+                    <h3>Predict next-day direction</h3>
+
+                    <p>
+                        Logistic Regression and Random Forest models test
+                        whether market and sentiment features can distinguish
+                        future up-days from down-days.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="method">
+
+                <span class="method-number">03</span>
+
+                <div>
+                    <h3>Discover behavioral regimes</h3>
+
+                    <p>
+                        K-Means clustering groups ticker-days with similar
+                        sentiment, attention, and same-day market behavior.
+                        Next-day returns are held out so they can be evaluated
+                        after the clusters are formed.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= RESULTS ================= -->
+
+        <section id="results" class="section">
+
+            <p class="section-number">04 · Results</p>
+
+            <div class="section-heading-row">
+
+                <h2>What did we find?</h2>
+
+                <p class="status-note">
+                    Final results pending updated ticker analysis.
+                </p>
+
+            </div>
+
+
+            <!-- RESULT 1 -->
+
+            <div class="finding">
+
+                <div class="finding-index">01</div>
+
+                <div class="finding-content">
+
+                    <p class="finding-label">Predictive performance</p>
+
+                    <h3 id="prediction-heading">
+                        Model comparison will appear here.
+                    </h3>
+
+                    <p id="prediction-copy">
+                        We are rerunning the models after updating the final
+                        group of stocks. Accuracy, ROC-AUC, and baseline
+                        comparisons will be added once the revised analysis
+                        is complete.
+                    </p>
+
+
+                    <div class="metric-line">
+
+                        <div>
+                            <span class="metric-name">Baseline</span>
+                            <strong>—</strong>
+                        </div>
+
+                        <div>
+                            <span class="metric-name">Logistic Regression</span>
+                            <strong>—</strong>
+                        </div>
+
+                        <div>
+                            <span class="metric-name">Random Forest</span>
+                            <strong>—</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESULT 2 -->
+
+            <div class="finding">
+
+                <div class="finding-index">02</div>
+
+                <div class="finding-content">
+
+                    <p class="finding-label">Investor sentiment</p>
+
+                    <h3>How bullish is StockTwits?</h3>
+
+                    <p>
+                        The updated sentiment distribution across the final
+                        ticker set will be reported here.
+                    </p>
+
+
+                    <div class="chart-placeholder">
+
+                        <div class="placeholder-label">
+                            FINAL FIGURE
+                        </div>
+
+                        <p>Sentiment by ticker</p>
+
+                        <small>
+                            Replace with regenerated notebook figure
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESULT 3 -->
+
+            <div class="finding">
+
+                <div class="finding-index">03</div>
+
+                <div class="finding-content">
+
+                    <p class="finding-label">Market regimes</p>
+
+                    <h3>What happens when attention gets extreme?</h3>
+
+                    <p>
+                        Revised cluster interpretations and next-day returns
+                        will be added after the final ticker dataset is run.
+                    </p>
+
+
+                    <div class="cluster-list">
+
+                        <div>
+                            <span>Cluster 01</span>
+                            <strong>Pending analysis</strong>
+                        </div>
+
+                        <div>
+                            <span>Cluster 02</span>
+                            <strong>Pending analysis</strong>
+                        </div>
+
+                        <div>
+                            <span>Cluster 03</span>
+                            <strong>Pending analysis</strong>
+                        </div>
+
+                        <div>
+                            <span>Cluster 04</span>
+                            <strong>Pending analysis</strong>
+                        </div>
+
+                        <div>
+                            <span>Cluster 05</span>
+                            <strong>Pending analysis</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================= CHART GALLERY ================= -->
+
+        <section class="section">
+
+            <p class="section-number">05 · Visual Analysis</p>
+
+            <h2>Following the signal across the market</h2>
+
+            <p class="lead smaller">
+                Final notebook visualizations will be placed here once the
+                revised ticker analysis is complete.
+            </p>
+
+
+            <div class="figure">
+
+                <div class="chart-placeholder large">
+
+                    <div class="placeholder-label">
+                        FIGURE PLACEHOLDER
+                    </div>
+
+                    <p>Indexed stock performance</p>
+
+                    <small>
+                        AAPL · AMZN · NVDA · FINAL STOCK
+                    </small>
+
+                </div>
+
+                <p class="figure-caption">
+                    Figure 01. Indexed performance of stocks included in the
+                    final analysis.
+                </p>
+
+            </div>
+
+
+            <div class="figure">
+
+                <div class="chart-placeholder large">
+
+                    <div class="placeholder-label">
+                        FIGURE PLACEHOLDER
+                    </div>
+
+                    <p>StockTwits sentiment by ticker</p>
+
+                    <small>
+                        Generated from revised notebook
+                    </small>
+
+                </div>
+
+                <p class="figure-caption">
+                    Figure 02. Distribution of bullish and bearish sentiment
+                    across the selected stocks.
+                </p>
+
+            </div>
+
+
+            <div class="figure">
+
+                <div class="chart-placeholder large">
+
+                    <div class="placeholder-label">
+                        FIGURE PLACEHOLDER
+                    </div>
+
+                    <p>K-Means market regimes</p>
+
+                    <small>
+                        Final clusters pending model rerun
+                    </small>
+
+                </div>
+
+                <p class="figure-caption">
+                    Figure 03. Trading days grouped by sentiment,
+                    attention, and market behavior.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= IMPACT ================= -->
+
+        <section id="impact" class="section">
+
+            <p class="section-number">06 · Why It Matters</p>
+
+            <h2>A prediction tool can influence the market it observes.</h2>
+
+            <div class="impact-grid">
+
+                <div>
+                    <h3>For investors</h3>
+
+                    <p>
+                        Social sentiment can feel like real-time intelligence,
+                        but apparent confidence online does not necessarily
+                        translate into reliable predictive information.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>For responsible AI</h3>
+
+                    <p>
+                        Financial models can amplify herd behavior, sampling
+                        bias, and false certainty. Baselines, time-aware
+                        validation, and careful leakage controls matter just
+                        as much as model complexity.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CONCLUSION ================= -->
+
+        <section class="section conclusion">
+
+            <p class="section-number">07 · Conclusion</p>
+
+            <h2 id="conclusion-title">
+                Final answer pending revised analysis.
+            </h2>
+
+            <p class="lead" id="conclusion-copy">
+                Once the final stock selection is complete, this section will
+                summarize whether StockTwits sentiment provided meaningful
+                predictive information, where the strongest patterns
+                appeared, and what those results mean for everyday investors.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            AI4ALL Ignite · Group 04 · 2026
+        </p>
+
+        <p>
+            Educational research only. Not financial advice.
+        </p>
+
+    </footer>
+
+</body>
+</html>
